@@ -72,13 +72,13 @@ def control_car(command, motorR, motorL):
         print("Moving backward")
     elif command == 'a':
         # Turn Left (Right wheel moves, left wheel stops)
-        motorR.throttle = 1.0  # Full speed right wheel
-        motorL.throttle = 0.0  # Stop left wheel
+        motorR.throttle = 0.0  # Full speed right wheel
+        motorL.throttle = 1.0  # Stop left wheel
         print("Turning left")
     elif command == 'd':
         # Turn Right (Left wheel moves, right wheel stops)
-        motorR.throttle = 0.0  # Stop right wheel
-        motorL.throttle = 1.0  # Full speed left wheel
+        motorR.throttle = 1.0  # Stop right wheel
+        motorL.throttle = 0.0  # Full speed left wheel
         print("Turning right")
     elif command == 'x':
         # Opposite turn (right forward, left backward)
@@ -93,12 +93,16 @@ def control_car(command, motorR, motorL):
     elif command == 'e':
         # Right wheel max, left wheel half
         motorR.throttle = 1.0  # Full speed right wheel
-        motorL.throttle = 0.5  # Half speed left wheel
+        motorL.throttle = 0.3  # Half speed left wheel
         print("Right wheel max, left wheel half speed")
     elif command == 'q':
         # Left wheel max, right wheel half
-        motorR.throttle = 0.5  # Half speed right wheel
+        motorR.throttle = 0.3  # Half speed right wheel
         motorL.throttle = 1.0  # Full speed left wheel
+        print("Left wheel max, right wheel half speed")
+    elif command == 'r':
+        motorR.throttle = 0.0  # Half speed right wheel
+        motorL.throttle = 0.0  # Full speed left wheel
         print("Left wheel max, right wheel half speed")
     else:
         print(f"Unknown command: {command}")
