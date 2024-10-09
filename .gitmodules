@@ -1,0 +1,3 @@
+[submodule "pid_folder/pid_folder/simple-pid"]
+	path = pid_folder/pid_folder/simple-pid
+	url = https://github.com/m-lundberg/simple-pid

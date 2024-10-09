@@ -8,7 +8,6 @@ from gpiozero import RotaryEncoder
 import os
 import sys
 import time
-import matplotlib.pyplot as plt
 from simple_pid import PID
 
 
@@ -30,20 +29,8 @@ class Motors:
         self.tcurr = 0
 
 
-
-    def get_motor():
+    def get_motor(self):
         i2c = busio.I2C(SCL, SDA)
-
-    #  Motor 1 is channels 9 and 10 with 8 held high.
-    # Motor 2 is channels 11 and 12 with 13 held high.
-    # Motor 3 is channels 3 and 4 with 2 held high.
-    # Motor 4 is channels 5 and 6 with 7 held high.
-
-    # DC Motors generate electrical noise when running that can reset the microcontroller in extreme
-    # cases. A capacitor can be used to help prevent this. The demo uses motor 4 because it worked ok
-    # in testing without a capacitor.
-    # See here for more info: https://learn.adafruit.com/adafruit-motor-shield-v2-for-arduino/faq#faq-13pca.channels[7].duty_cycle = 0xFFFF
-
 
         pwminb1 = pwmio.PWMOut(board.D19)
         pwminb2 = pwmio.PWMOut(board.D26)
@@ -53,51 +40,47 @@ class Motors:
 
         motorL= motor.DCMotor(pwmina1, pwmina2)
         motorR = motor.DCMotor(pwminb1, pwminb2)
+        motorL.throttle = 1
 
         return motorL, motorR
-    
+
+
     # calculates the steps since the last timestep
     def get_steps_p_sam(self):
-        return self.l_rotor.steps, self.r_rotor.steps
-    
 
-    
+        return self.l_rotor.steps, self.r_rotor.steps
 
 
     def update(self,l_motor_power, r_motor_power):
-        self.l_motor.throttle(l_motor_power)
-        self.r_motor.throttle(r_motor_power)
+        self.l_motor.throttle = l_motor_power
+        self.r_motor.throttle = r_motor_power
 
-        # Time passes 
+        # Time passes
         time.sleep(0.2)
 
         return self.get_steps_p_sam()
-    
-
-    # 
+    #
     def setup(self, l_rot_p_sam, r_rot_p_sam_goal):
-        self.l_pid = PID(0, 0, 0, setpoint=l_rot_p_sam)
+        self.l_pid = PID(0.1, 0, 0, setpoint=l_rot_p_sam)
         l_pid.output_limits = (-1, 1)
 
-        r_pid = PID(0, 0, 0, setpoint=r_rot_p_sam_goal)
+        r_pid = PID(1, 0, 0, setpoint=r_rot_p_sam_goal)
         r_pid.output_limits = (-1, 1)
-
-
-
-
 
 
 
 if __name__ == '__main__':
     motors = Motors()
-    
+
     l_rot, r_rot = motors.get_steps_p_sam()
-
-
-    l_pid = PID(0, 0, 0, setpoint=5)
+    kp = 0.25
+    ki = 0.01
+    kd = 0
+    l_pid = PID(kp, ki, kd, setpoint=20)
     l_pid.output_limits = (-1, 1)
 
-    r_pid = PID(0, 0, 0, setpoint=5)
+
+    r_pid = PID(kp, ki, kd, setpoint=20)
     r_pid.output_limits = (-1, 1)
 
     start_time = time.time()
@@ -107,29 +90,26 @@ if __name__ == '__main__':
     setpoint, y, x = [], [], []
 
     while time.time() - start_time < 10:
+
+
         current_time = time.time()
         dt = current_time - last_time
 
         l_power = l_pid(l_rot)
         r_power = r_pid(r_rot)
+        print("r_rot: ", r_rot)
         l_rot, r_rot = motors.update(l_power, r_power)
+        print("l rotations ", l_rot, " r_rotations " , r_rot)
 
-        x += [current_time - start_time]
+        x += [r_rot]
         y += [r_power]
         setpoint += [l_pid.setpoint]
 
         if current_time - start_time > 1:
-            l_pid.setpoint = 100
+            l_pid.setpoint = 20
 
         last_time = current_time
 
-    plt.plot(x, y, label='measured')
-    plt.plot(x, setpoint, label='target')
-    plt.xlabel('time')
-    plt.ylabel('temperature')
-    plt.legend()
-    if os.getenv('NO_DISPLAY'):
-        # If run in CI the plot is saved to file instead of shown to the user
-        plt.savefig(f"result-py{'.'.join([str(x) for x in sys.version_info[:2]])}.png")
-    else:
-        plt.show()
+print("x \n", x)
+print("y \n", y)
+print("setpoint \n", setpoint)

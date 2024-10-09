@@ -5,7 +5,7 @@ from gpiozero import RotaryEncoder
 
 # Assigning parameter values
 ppr = 300.8  # Pulses Per Revolution of the encoder
-tstop = 20  # Loop execution duration (s)
+tstop = 60  # Loop execution duration (s)
 tsample = 0.02  # Sampling period for code execution (s)
 tdisp = 0.5  # Sampling period for values display (s)
 
@@ -34,7 +34,7 @@ while tcurr <= tstop:
     # Printing angular position every `tdisp` seconds
     if (np.floor(tcurr/tdisp) - np.floor(tprev/tdisp)) == 1:
         print("Angle = {:0.0f} deg".format(anglecurr))
-        print("Right Steps                   ", r_anglecurr)
+        print("left Steps ", anglecurr, " right steps ", r_anglecurr)
     # Updating previous values
     tprev = tcurr
 
