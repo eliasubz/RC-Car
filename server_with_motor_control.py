@@ -10,16 +10,6 @@ from adafruit_motor import motor
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
 
-#  Motor 1 is channels 9 and 10 with 8 held high.
-# Motor 2 is channels 11 and 12 with 13 held high.
-# Motor 3 is channels 3 and 4 with 2 held high.
-# Motor 4 is channels 5 and 6 with 7 held high.
-
-# DC Motors generate electrical noise when running that can reset the microcontroller in extreme
-# cases. A capacitor can be used to help prevent this. The demo uses motor 4 because it worked ok
-# in testing without a capacitor.
-# See here for more info: https://learn.adafruit.com/adafruit-motor-shield-v2-for-arduino/faq#faq-13pca.channels[7].duty_cycle = 0xFFFF
-
 
     pwminb1 = pwmio.PWMOut(board.D19)
     pwminb2 = pwmio.PWMOut(board.D26)
@@ -29,7 +19,7 @@ def get_motor():
 
     motorL= motor.DCMotor(pwmina1, pwmina2)
     motorR = motor.DCMotor(pwminb1, pwminb2)
-
+    
     return motorL, motorR
 
 def server_program():
