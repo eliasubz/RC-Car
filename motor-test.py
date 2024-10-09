@@ -41,14 +41,15 @@ motorR.decay_mode = (
 )
 
 
-print("Forwards")
-motorR.throttle = 0.99
-print("throttle:", motorR.throttle)
-print("Forwards")
-motorL.throttle = -1
-print("throttle:", motorL.throttle)
-time.sleep(8)
 
+print("Right")
+motorR.throttle = 1 
+
+time.sleep(2)
+print("Left")
+motorL.throttle = 1
+motorR.throttle = 0
+time.sleep(2)
 
 
 
