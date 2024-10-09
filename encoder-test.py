@@ -10,8 +10,8 @@ tsample = 0.02  # Sampling period for code execution (s)
 tdisp = 0.5  # Sampling period for values display (s)
 
 # Creating encoder object using GPIO pins 24 and 25
-encoder = RotaryEncoder(17, 4, max_steps=0)
-r_rotor = RotaryEncoder(5, 13)
+encoder = RotaryEncoder(17, 4, max_steps = 0)
+r_rotor = RotaryEncoder(5, 13, max_steps = 0)
 # Initializing previous values and starting main clock
 anglecurr = 0
 tprev = 0

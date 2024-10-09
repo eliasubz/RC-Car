@@ -20,8 +20,8 @@ class Motors:
 
     def __init__(self):
         self.l_motor, self.r_motor = self.get_motor()
-        self.l_rotor = RotaryEncoder(4, 17)
-        self.r_rotor = RotaryEncoder(5, 13)
+        self.l_rotor = RotaryEncoder(4, 17, max_steps=0)
+        self.r_rotor = RotaryEncoder(5, 13, max_steps=0)
         self.l_rot_p_s = 0
         self.r_rot_p_s = 0
         self.tstart = time.perf_counter()
