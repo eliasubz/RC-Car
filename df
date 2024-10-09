@@ -1,0 +1,41 @@
+[33mcommit e5dc611e9df8acfc30ea7222a3624528b7b56790[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Maix Linux <eliasls2002@yahoo.de>
+Date:   Wed Oct 9 10:42:44 2024 +0000
+
+    getting everything up to date
+
+[33mcommit 2d18aafd61956516dcb18f14205c5ede973f4e91[m
+Author: Maix Linux <eliasls2002@yahoo.de>
+Date:   Wed Oct 2 17:15:01 2024 +0000
+
+    corrected left and right (a d) and added a stropping button (r)
+
+[33mcommit 36e6a8822b1fd14b3facae3156c935e4ce329b64[m
+Author: Maix Linux <eliasls2002@yahoo.de>
+Date:   Wed Oct 2 16:49:23 2024 +0000
+
+    pushing server with motor conrol
+
+[33mcommit adcba1b583dae5a0c06015e3e58a263fe47e7cb4[m
+Author: Maix Linux <eliasls2002@yahoo.de>
+Date:   Wed Oct 2 12:32:36 2024 +0000
+
+    updated host ip
+
+[33mcommit e6f2650a9a6fd9e5c9975e74c1bcc2a33c0b52c4[m
+Author: Maix Linux <eliasls2002@yahoo.de>
+Date:   Wed Oct 2 12:25:01 2024 +0000
+
+    Pushing client and server
+
+[33mcommit 54a921f7c920717faf2d906d8e5dc90031b44e44[m
+Author: Rasparry Elias <eliasls2002@yahoo.de>
+Date:   Wed Oct 2 11:35:46 2024 +0000
+
+    second commit
+
+[33mcommit d33415928fa52d09305e49ffb6bbdae04be832e2[m
+Author: Rasparry Elias <eliasls2002@yahoo.de>
+Date:   Wed Oct 2 11:03:49 2024 +0000
+
+    first commit
