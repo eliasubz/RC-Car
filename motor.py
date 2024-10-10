@@ -51,11 +51,14 @@ class Motors:
     def get_steps_p_sam(self):
         self.tcurr = time.perf_counter() - self.tstart
         print("current time ", self.tcurr )
-        l_speed = (self.l_rotor.steps - self.lprevstep) / (self.tcurr - self.tprev)
-        r_speed = (self.r_rotor.steps - self.rprevstep) / (self.tcurr - self.tprev)
+        dt = self.tcurr - self.tprev
+        l_speed = (self.l_rotor.steps - self.lprevstep) / (dt)
+        r_speed = (self.r_rotor.steps - self.rprevstep) / (dt)
         self.lprevstep = self.l_rotor.steps
         self.rprevstep = self.r_rotor.steps
         self.tprev = self.tcurr
+        if (l_speed == 0):
+            print(self.l_rotor.steps, " " , self.lprevstep , "  " , dt) 
         return l_speed, r_speed
 
 
@@ -64,14 +67,14 @@ class Motors:
         self.l_motor.throttle = max(-1, min(self.l_motor.throttle + l_motor_power, 1))
 
         self.r_motor.throttle = max(-1, min(self.r_motor.throttle + r_motor_power, 1))
-
+        print(self.l_motor.throttle)
         # Time passes
-        time.sleep(0.2)
+        time.sleep(0.1)
 
         return self.get_steps_p_sam()
 
     def setup(self, l_rot_p_sam_goal, r_rot_p_sam_goal):
-        kp = 0.00005
+        kp = 0.00001
         ki = 0.001
         kd = 0.001
         l_pid = PID(kp, ki, kd, setpoint=l_rot_p_sam_goal)
@@ -87,9 +90,9 @@ if __name__ == '__main__':
     motors = Motors()
 
     l_rot, r_rot = motors.get_steps_p_sam()
-    kp = 0.001
-    ki = 0.00
-    kd = 0.00
+    kp = 0.0001
+    ki = 0.0000
+    kd = 0.0000
     l_goal_speed = 500
     r_goal_speed = 500
     l_pid = PID(kp, ki, kd, setpoint=l_goal_speed)
@@ -115,6 +118,8 @@ if __name__ == '__main__':
         y += [r_power]
         setpoint += [l_pid.setpoint]
 
+        if time.time() - start_time < 10 and l_pid.setpoint != 900:
+            l_pid = PID(kp, ki, kd, setpoint=900)
 
 
 
