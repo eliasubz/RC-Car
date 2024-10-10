@@ -6,6 +6,7 @@ import board
 import busio
 import pwmio
 from adafruit_motor import motor
+from motor import Motors
 
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
@@ -35,6 +36,8 @@ def server_program():
     print(f"Connection from: {address}")
 
     mL, mR = get_motor()
+    motors = Motors()
+
 
     # Mapping commands to car actions
     while True:
@@ -45,9 +48,16 @@ def server_program():
         print(f"Command received: {data}")
 
         # Call function to control car's motors
-        control_car(data, mL, mR)
+        #control_car(data, mL, mR)
+        motors.drive_car(data)
+
 
     conn.close()  # Close connection when done
+
+def drive_car(command):
+    if command == 'w':
+        motor.run(1000,1000)
+        print("Moving forward")
 
 def control_car(command, motorR, motorL):
     if command == 'w':
