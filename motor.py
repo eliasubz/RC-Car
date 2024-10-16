@@ -32,12 +32,14 @@ class Motors:
 
         # PID Setup
         self.kp = 0.00001
-        self.ki = 0.001
-        self.kd = 0.001
+        self.ki = 0.00002
+        self.kd = 0.000001
 
         self.l_pid = PID(self.kp, self.ki, self.kd, setpoint=0)
         self.r_pid = PID(self.kp, self.ki, self.kd, setpoint=0)
 
+        self.l_speed = 0
+        self.r_speed = 0
 
     def get_motor(self):
         i2c = busio.I2C(SCL, SDA)
@@ -83,19 +85,19 @@ class Motors:
     
 
     def run (self, l_speed_goal, r_speed_goal):
-        if self.l_pid.setpoint != l_speed:
-            self.l_pid.setpoint = PID(self.kp, self.ki, self.kd, setpoint=l_speed_goal)
+        if self.l_pid.setpoint != l_speed_goal:
+            self.l_pid = PID(self.kp, self.ki, self.kd, setpoint=l_speed_goal)
 
-        if self.r_pid.setpoint != r_speed:
-            self.r_pid.setpoint = PID(self.kp, self.ki, self.kd, setpoint=r_speed_goal)
+        if self.r_pid.setpoint != r_speed_goal:
+            self.r_pid = PID(self.kp, self.ki, self.kd, setpoint=r_speed_goal)
 
 
-        l_power = self.l_pid(l_speed)
-        r_power = self.r_pid(r_speed)
-        l_speed, r_speed = self.update(l_power, r_power)
-        print("l_s ", l_speed, " r_s " , r_speed, " l_p ", l_power, " r_p ", r_power)
+        l_power = self.l_pid(self.l_speed)
+        r_power = self.r_pid(self.r_speed)
+        self.l_speed, self.r_speed = self.update(l_power, r_power)
+        print("l_s ", self.l_speed, " r_s " , self.r_speed, " l_p ", l_power, " r_p ", r_power)
 
-        
+
 
 
 
@@ -149,6 +151,3 @@ if __name__ == '__main__':
 
 
 
-print("x \n", x)
-print("y \n", y)
-print("setpoint \n", setpoint)

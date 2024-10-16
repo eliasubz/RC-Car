@@ -1,6 +1,6 @@
 import socket
 import time
-
+import select
 from board import SCL, SDA
 import board
 import busio
@@ -12,16 +12,17 @@ def get_motor():
     i2c = busio.I2C(SCL, SDA)
 
 
-    pwminb1 = pwmio.PWMOut(board.D19)
-    pwminb2 = pwmio.PWMOut(board.D26)
-    pwmina1 = pwmio.PWMOut(board.D20)
-    pwmina2 = pwmio.PWMOut(board.D21)
+    #pwminb1 = pwmio.PWMOut(board.D19)
+    #pwminb2 = pwmio.PWMOut(board.D26)
+    #pwmina1 = pwmio.PWMOut(board.D20)
+    #pwmina2 = pwmio.PWMOut(board.D21)
 
 
-    motorL= motor.DCMotor(pwmina1, pwmina2)
-    motorR = motor.DCMotor(pwminb1, pwminb2)
+    #motorL= motor.DCMotor(pwmina1, pwmina2)
+    #motorR = motor.DCMotor(pwminb1, pwminb2)
     
-    return motorL, motorR
+    #return motorL, motorR
+    return i2c, 0
 
 def server_program():
     host = "10.98.212.51"
@@ -37,26 +38,31 @@ def server_program():
 
     mL, mR = get_motor()
     motors = Motors()
+    data = ''
 
 
-    # Mapping commands to car actions
     while True:
-        data = conn.recv(1024).decode()  # Receive data from client
-        if not data:
-            break  # If no data is received, break the connection
-        
-        print(f"Command received: {data}")
+        ready_to_read, _, _ = select.select([conn], [], [], 0)
 
-        # Call function to control car's motors
-        #control_car(data, mL, mR)
-        motors.drive_car(data)
+
+    # Try receiving data (non-blocking mode)
+        if ready_to_read:
+            data = conn.recv(1024).decode()
+            print(f"New Command received: {data}")
+
+        drive_car(data, motors)
+
+
+        # PID controller or other ongoing tasks can run here
+        # For example, you can add logic to control the car's behavior
+        # based on sensor inputs, time, etc.
 
 
     conn.close()  # Close connection when done
 
-def drive_car(command):
+def drive_car(command, motors):
     if command == 'w':
-        motor.run(1000,1000)
+        motors.run(1000,1000)
         print("Moving forward")
 
 def control_car(command, motorR, motorL):
