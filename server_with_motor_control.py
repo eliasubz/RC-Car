@@ -53,7 +53,7 @@ def server_program():
             new_data = conn.recv(1024).decode()
             if new_data != "" and len(new_data) == 1:
                 data = new_data
-        print(f"New Command that is active: {data}")
+        # print(f"New Command that is active: {data}")
 
         drive_car(data, motors)
 
@@ -88,17 +88,17 @@ def drive_car(command, motors):
     if command == 'w':
         # Move forward (both motors at the same positive speed)
         motors.run(alpha * max_speed, alpha * max_speed)
-        print(f"Moving forward at speed {alpha * max_speed}")
+        # print(f"Moving forward at speed {alpha * max_speed}")
 
     elif command == 's':
         # Move backward (both motors at the same negative speed)
         motors.run(-alpha * max_speed, -alpha * max_speed)
-        print(f"Moving backward at speed {alpha * max_speed}")
+        # print(f"Moving backward at speed {alpha * max_speed}")
 
     elif command == 'a':
         # Turn left (right motor moves forward, left motor slows down or stops)
         motors.run(0, alpha * max_speed)  # Left motor stopped, right motor at speed
-        print(f"Turning left at speed {alpha * max_speed}")
+        # print(f"Turning left at speed {alpha * max_speed}")
 
     elif command == 'd':
         # Turn right (left motor moves forward, right motor slows down or stops)

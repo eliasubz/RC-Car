@@ -32,7 +32,7 @@ class Motors:
 
         # PID Setup
         self.kp = 0.00001
-        self.ki = 0.00002
+        self.ki = 0.000001
         self.kd = 0.000001
 
         self.l_pid = PID(self.kp, self.ki, self.kd, setpoint=0)
@@ -74,6 +74,8 @@ class Motors:
 
     def update(self,l_motor_power, r_motor_power):
         # Calculate and clamp the left motor throttle
+        print("raw speeds : ", self.l_motor.throttle + l_motor_power, " " ,self.r_motor.throttle + r_motor_power)
+
         self.l_motor.throttle = max(-1, min(self.l_motor.throttle + l_motor_power, 1))
 
         self.r_motor.throttle = max(-1, min(self.r_motor.throttle + r_motor_power, 1))
@@ -81,25 +83,31 @@ class Motors:
         # Time passes
         time.sleep(0.1)
 
-        return self.get_steps_p_sam()
-    
+        return self.l_speed, self.r_speed
+
 
     def run (self, l_speed_goal, r_speed_goal):
+        if l_speed_goal == 0:
+            self.l_motor.throttle = 0
+
+        if r_speed_goal == 0:
+            self.r_motor.throttle = 0
+
         if self.l_pid.setpoint != l_speed_goal:
+            print("Left Speed is updated to: ", l_speed_goal)
             self.l_pid = PID(self.kp, self.ki, self.kd, setpoint=l_speed_goal)
 
         if self.r_pid.setpoint != r_speed_goal:
+            print("Right Speed is updated to: ", r_speed_goal)
             self.r_pid = PID(self.kp, self.ki, self.kd, setpoint=r_speed_goal)
 
-
+        self.l_speed, self.r_speed = self.get_steps_p_sam()
         l_power = self.l_pid(self.l_speed)
         r_power = self.r_pid(self.r_speed)
-        self.l_speed, self.r_speed = self.update(l_power, r_power)
         print(f"l_s: {self.l_speed:.2f}, l_p: {l_power:.2f}, left throttle: {self.l_motor.throttle:.2f}, \nr_s: {self.r_speed:.2f}, r_p: {r_power:.2f}, right throttle: {self.r_motor.throttle:.2f}")
-
-
-
-
+        print("Left setpoint: ", self.l_pid.setpoint)
+        print("Right setpoint: ", self.r_pid.setpoint)
+        self.l_speed, self.r_speed = self.update(l_power, r_power)
 
     def setup(self, l_rot_p_sec_goal, r_rot_p_sec_goal):
         kp = 0.00001
