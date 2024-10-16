@@ -47,11 +47,13 @@ def server_program():
     while True:
         ready_to_read, _, _ = select.select([conn], [], [], 0)
 
-
     # Try receiving data (non-blocking mode)
-        if ready_to_read:
-            data = conn.recv(1024).decode()
-            print(f"New Command received: {data}")
+
+        if ready_to_read: 
+            new_data = conn.recv(1024).decode()
+            if new_data != "" and len(new_data) == 1:
+                data = new_data
+        print(f"New Command that is active: {data}")
 
         drive_car(data, motors)
 
@@ -128,8 +130,6 @@ def drive_car(command, motors):
         motors.run(0, 0)
         print("Motors stopped")
 
-    else:
-        print(f"Unknown command: {command}")
 
 def control_car(command, motorR, motorL):
     if command == 'w':

@@ -95,7 +95,7 @@ class Motors:
         l_power = self.l_pid(self.l_speed)
         r_power = self.r_pid(self.r_speed)
         self.l_speed, self.r_speed = self.update(l_power, r_power)
-        print("l_s ", self.l_speed, " r_s " , self.r_speed, " l_p ", l_power, " r_p ", r_power)
+        print(f"l_s: {self.l_speed:.2f}, l_p: {l_power:.2f}, left throttle: {self.l_motor.throttle:.2f}, \nr_s: {self.r_speed:.2f}, r_p: {r_power:.2f}, right throttle: {self.r_motor.throttle:.2f}")
 
 
 
