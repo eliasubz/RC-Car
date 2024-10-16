@@ -37,7 +37,7 @@ def server_program():
 
 
     while True:
-        # Checking if there is nothing closer then 20 cm
+        # Checking if there is nothing closer than 20 cm
         if infra.run() < 20:
             print("Something came to close initiating slow retreatment")
             lm, rm = motors.get_motor()
