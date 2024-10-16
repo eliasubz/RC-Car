@@ -10,13 +10,13 @@ import board
 import adafruit_mcp3xxx.mcp3008 as MCP
 from adafruit_mcp3xxx.analog_in import AnalogIn
 
-class DistanceSensor:
+class Infra:
     def __init__(self):
         # Initialize SPI bus and MCP3008
         self.spi = busio.SPI(clock=board.SCK,  MISO=board.MISO, MOSI=board.MOSI)
         self.cs = digitalio.DigitalInOut(board.D12)
         self.mcp = MCP.MCP3008(self.spi, self.cs)
-        self.channel = AnalogIn(self.mcp, MCP.p0)
+        self.channel = AnalogIn(self.mcp, MCP.P0)
 
     def voltage_to_distance(self, voltage):
         """Convert voltage to distance using a reference table and linear interpolation."""
