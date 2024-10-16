@@ -8,6 +8,9 @@ import pwmio
 from adafruit_motor import motor
 from motor import Motors
 
+alpha = 1
+
+
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
 
@@ -60,10 +63,73 @@ def server_program():
 
     conn.close()  # Close connection when done
 
+
 def drive_car(command, motors):
+    global alpha
+    max_speed = 1300  # Maximum motor speed
+    
+    # Adjust alpha values for speed scaling
+    if command == 'j':  
+        alpha = 0.75  # 75% speed mode
+        print(f"Alpha set to {alpha} (75% speed mode)")
+    elif command == 'k':  
+        alpha = 0.5  # 50% speed mode
+        print(f"Alpha set to {alpha} (50% speed mode)")
+    elif command == 'l':  
+        alpha = 0.25  # 25% speed mode
+        print(f"Alpha set to {alpha} (25% speed mode)")
+    elif command == 'h':  
+        alpha = 1.0  # Reset speed to full
+        print(f"Alpha reset to {alpha} (Full-speed mode)")
+
+    # Handle directional controls
     if command == 'w':
-        motors.run(1000,1000)
-        print("Moving forward")
+        # Move forward (both motors at the same positive speed)
+        motors.run(alpha * max_speed, alpha * max_speed)
+        print(f"Moving forward at speed {alpha * max_speed}")
+
+    elif command == 's':
+        # Move backward (both motors at the same negative speed)
+        motors.run(-alpha * max_speed, -alpha * max_speed)
+        print(f"Moving backward at speed {alpha * max_speed}")
+
+    elif command == 'a':
+        # Turn left (right motor moves forward, left motor slows down or stops)
+        motors.run(0, alpha * max_speed)  # Left motor stopped, right motor at speed
+        print(f"Turning left at speed {alpha * max_speed}")
+
+    elif command == 'd':
+        # Turn right (left motor moves forward, right motor slows down or stops)
+        motors.run(alpha * max_speed, 0)  # Left motor at speed, right motor stopped
+        print(f"Turning right at speed {alpha * max_speed}")
+
+    elif command == 'x':
+        # Opposite turn (left motor moves backward, right motor forward)
+        motors.run(-alpha * max_speed, alpha * max_speed)
+        print(f"Opposite turn (left backward, right forward) at speed {alpha * max_speed}")
+    
+    elif command == 'y':
+        # Opposite turn (right motor moves backward, left motor forward)
+        motors.run(alpha * max_speed, -alpha * max_speed)
+        print(f"Opposite turn (left forward, right backward) at speed {alpha * max_speed}")
+    
+    elif command == 'e':
+        # Right motor at max speed, left motor at half speed (curved right)
+        motors.run(alpha * max_speed * 0.5, alpha * max_speed)
+        print(f"Curving right (left motor half speed, right motor full speed) at {alpha * max_speed}")
+
+    elif command == 'q':
+        # Left motor at max speed, right motor at half speed (curved left)
+        motors.run(alpha * max_speed, alpha * max_speed * 0.5)
+        print(f"Curving left (left motor full speed, right motor half speed) at {alpha * max_speed}")
+
+    elif command == 'r':
+        # Stop both motors
+        motors.run(0, 0)
+        print("Motors stopped")
+
+    else:
+        print(f"Unknown command: {command}")
 
 def control_car(command, motorR, motorL):
     if command == 'w':
