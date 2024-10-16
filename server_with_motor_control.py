@@ -7,24 +7,13 @@ import busio
 import pwmio
 from adafruit_motor import motor
 from motor import Motors
+from Infra import Infra
 
 alpha = 1
 
 
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
-
-
-    #pwminb1 = pwmio.PWMOut(board.D19)
-    #pwminb2 = pwmio.PWMOut(board.D26)
-    #pwmina1 = pwmio.PWMOut(board.D20)
-    #pwmina2 = pwmio.PWMOut(board.D21)
-
-
-    #motorL= motor.DCMotor(pwmina1, pwmina2)
-    #motorR = motor.DCMotor(pwminb1, pwminb2)
-    
-    #return motorL, motorR
     return i2c, 0
 
 def server_program():
@@ -39,14 +28,25 @@ def server_program():
     conn, address = server_socket.accept()  # Accept new connection
     print(f"Connection from: {address}")
 
-    mL, mR = get_motor()
+    # Setting up the motors
     motors = Motors()
     data = ''
 
+    # Setting up the infrared sensor
+    infra = Infra()
+
 
     while True:
-        ready_to_read, _, _ = select.select([conn], [], [], 0)
+        # Checking if there is nothing closer then 20 cm
+        if infra.run() < 20:
+            print("Something came to close initiating slow retreatment")
+            lm, rm = motors.get_motor()
+            lm.throttle = -0.1
+            lm.throttle = -0.1
+            time.sleep(0.5)
 
+
+        ready_to_read, _, _ = select.select([conn], [], [], 0)
     # Try receiving data (non-blocking mode)
 
         if ready_to_read: 
