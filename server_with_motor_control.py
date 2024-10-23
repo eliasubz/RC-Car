@@ -59,7 +59,7 @@ def server_program():
             if new_data != "" and len(new_data) == 1:
                 data = new_data
         # print(f"New Command that is active: {data}")
-        if time.time() - prev_time < 0.1:
+        if time.time() - prev_time < 0.5:
             drive_car(data, motors)
 
 
