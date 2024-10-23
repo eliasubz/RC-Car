@@ -5,12 +5,19 @@ from adafruit_mpl3115a2 import MPL3115A2
 import busio
 import digitalio
 import adafruit_ssd1306
+import adafruit_tcs34725
+
+
+# Create sensor object, communicating over the board's default I2C bus
+i2c = board.I2C()  # uses board.SCL and board.SDA
+# i2c = board.STEMMA_I2C()  # For using the built-in STEMMA QT connector on a m>
+sensor = adafruit_tcs34725.TCS34725(i2c)
 
 # Initialize I2C bus
-ic2_sen = busio.I2C(board.SCL, board.SDA)
+# ic2_sen = busio.I2C(board.SCL, board.SDA)
 
 # Initialize the sensor
-sensor = MPL3115A2(ic2_sen)
+# sensor = MPL3115A2(ic2_sen)
 
 # Prepare the display
 oled_reset = digitalio.DigitalInOut(board.D4)

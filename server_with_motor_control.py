@@ -40,10 +40,10 @@ def server_program():
         # Checking if there is nothing closer than 20 cm
         if infra.run() < 20:
             print("Something came to close initiating slow retreatment")
-            lm, rm = motors.get_motor()
-            lm.throttle = -0.1
-            lm.throttle = -0.1
-            time.sleep(0.5)
+            lm, rm = motors.get_motors()
+            lm.throttle = -0.2
+            rm.throttle = -0.2
+            time.sleep(5)
 
 
         ready_to_read, _, _ = select.select([conn], [], [], 0)
