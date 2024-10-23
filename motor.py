@@ -83,8 +83,6 @@ class Motors:
 
         self.r_motor.throttle = max(-1, min(self.r_motor.throttle + r_motor_power, 1))
         print(self.l_motor.throttle)
-        # Time passes
-        time.sleep(0.1)
 
         return self.l_speed, self.r_speed
 

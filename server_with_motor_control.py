@@ -39,7 +39,8 @@ def server_program():
     # Setting up the rgb sensor
     rgb = RGB()
 
-
+    # starting time
+    prev_time = time.time()
     while True:
         # Checking if there is nothing closer than 20 cm
         if infra.run() < 20:
@@ -58,20 +59,32 @@ def server_program():
             if new_data != "" and len(new_data) == 1:
                 data = new_data
         # print(f"New Command that is active: {data}")
-
-        drive_car(data, motors)
+        if time.time() - prev_time < 0.1:
+            drive_car(data, motors)
 
 
         # PID controller or other ongoing tasks can run here
         # For example, you can add logic to control the car's behavior
         # based on sensor inputs, time, etc.
 
-        adjust_alignment(rgb)
+        adjust_alignment(rgb,motors)
 
 
     conn.close()  # Close connection when done
 
-def adjust_alignment():
+def adjust_alignment(rgb,motors):
+    r,g,b = rgb
+    if r > g+b :
+        print("We see red GO Right")
+        motors.r_motor.throttle = 0
+
+    elif b > r+g:
+        print("We see blue Go LEFT")
+        motors.l_motor.throttle = 0
+
+    else: 
+        print("We see black alllegidly")
+        print("red: ", r, " green ", g, " blue: ", b)
     return 0
 
 def drive_car(command, motors):
