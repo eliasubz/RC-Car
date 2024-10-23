@@ -61,6 +61,7 @@ def server_program():
         # print(f"New Command that is active: {data}")
         if time.time() - prev_time < 0.5:
             drive_car(data, motors)
+            prev_time = time.time()
 
 
         # PID controller or other ongoing tasks can run here
@@ -73,12 +74,12 @@ def server_program():
     conn.close()  # Close connection when done
 
 def adjust_alignment(rgb,motors):
-    r,g,b = rgb
+    r,g,b = rgb.sensor.color_rgb_bytes
     if r > g+b :
         print("We see red GO Right")
         motors.r_motor.throttle = 0
 
-    elif b > r+g:
+    elif b > r+ g or b > 15:
         print("We see blue Go LEFT")
         motors.l_motor.throttle = 0
 
