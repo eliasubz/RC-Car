@@ -25,10 +25,13 @@ while True:
     # print(sensor.color_raw)
 
     color = sensor.color
-    color_rgb = sensor.color_rgb_bytes
+    rgb = sensor.color_rgb_bytes
+    r, g, b = rgb
+
+
     print(
         "RGB color as 8 bits per channel int: #{0:02X} or as 3-tuple: {1}".format(
-            color, color_rgb
+            color, r,g,b
         )
     )
 

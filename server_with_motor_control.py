@@ -8,6 +8,7 @@ import pwmio
 from adafruit_motor import motor
 from motor import Motors
 from Infra import Infra
+from rgb_sensor import RGB
 
 alpha = 1
 
@@ -35,15 +36,18 @@ def server_program():
     # Setting up the infrared sensor
     infra = Infra()
 
+    # Setting up the rgb sensor
+    rgb = RGB()
+
 
     while True:
         # Checking if there is nothing closer than 20 cm
         if infra.run() < 20:
             print("Something came to close initiating slow retreatment")
-            lm, rm = motors.get_motors()
-            lm.throttle = -0.2
-            rm.throttle = -0.2
-            time.sleep(5)
+            lm, rm = motors.get_motor()
+            lm.throttle = -0.1
+            lm.throttle = -0.1
+            time.sleep(0.5)
 
 
         ready_to_read, _, _ = select.select([conn], [], [], 0)
@@ -62,9 +66,13 @@ def server_program():
         # For example, you can add logic to control the car's behavior
         # based on sensor inputs, time, etc.
 
+        adjust_alignment(rgb)
+
 
     conn.close()  # Close connection when done
 
+def adjust_alignment():
+    return 0
 
 def drive_car(command, motors):
     global alpha
