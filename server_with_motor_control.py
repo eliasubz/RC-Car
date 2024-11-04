@@ -122,6 +122,8 @@ def old_adjust_alignment(rgb, motors):
     return 0
 
 def adjust_alignment(rgb, motors):
+    global r_mov
+    global l_mov
     r, g, b = rgb.sensor.color_rgb_bytes
     if r > g + b:
         print("We see red GO Right")
