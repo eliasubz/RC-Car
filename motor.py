@@ -63,6 +63,8 @@ class Motors:
         tcurr = time.time()
         cur_steps = self.r_rotor.steps
         r_sped = (cur_steps - self.rprevstep) / (tcurr - self.rprev_time)
+        print((cur_steps - self.rprevstep))
+        print(tcurr - self.rprev_time)
         self.rprevstep = cur_steps
         self.rprev_time = tcurr
         # deltaT = self.rprev_time - self.lprev_time
@@ -72,6 +74,8 @@ class Motors:
         tcurr = time.time()
         cur_steps = self.l_rotor.steps
         l_sped = (cur_steps - self.lprevstep) / (tcurr - self.lprev_time)
+        print((cur_steps - self.lprevstep))
+        print(tcurr - self.lprev_time)
         self.lprevstep = cur_steps
         self.lprev_time = tcurr
         return l_sped, r_sped
