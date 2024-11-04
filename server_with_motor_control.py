@@ -72,7 +72,7 @@ def server_program():
             prev_time = time.time()
 
         # Checking if there is nothing closer than 20 cm
-        if data = "w":
+        if data == "w":
             forward = adjust_distance(infra, motors)
         adjust_alignment(rgb, motors)
         # PID controller or other ongoing tasks can run here
