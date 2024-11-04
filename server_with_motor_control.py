@@ -44,10 +44,6 @@ def server_program():
     prev_time = time.time()
     forward = 1
     while True:
-        # Checking if there is nothing closer than 20 cm
-        if forward:
-            forward = adjust_distance(infra, motors)
-        adjust_alignment(rgb, motors)
 
         # if infra.run() < 20:
         #     print("Something came to close initiating slow retreatment")
@@ -74,6 +70,10 @@ def server_program():
             forward = 1
             prev_time = time.time()
 
+        # Checking if there is nothing closer than 20 cm
+        if forward and data == "w":
+            forward = adjust_distance(infra, motors)
+        adjust_alignment(rgb, motors)
         # PID controller or other ongoing tasks can run here
         # For example, you can add logic to control the car's behavior
         # based on sensor inputs, time, etc.
