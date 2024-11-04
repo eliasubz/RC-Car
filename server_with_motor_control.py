@@ -45,13 +45,7 @@ def server_program():
     forward = 1
     while True:
 
-        # if infra.run() < 20:
-        #     print("Something came to close initiating slow retreatment")
-        #     lm, rm = motors.get_motor()
-        #     lm.throttle = -0.1
-        #     rm.throttle = -0.1
-        #     time.sleep(0.5)
-
+    
         ready_to_read, _, _ = select.select([conn], [], [], 0)
         # Try receiving data (non-blocking mode)
 
@@ -61,19 +55,17 @@ def server_program():
             if new_data != "" and len(new_data) == 1:
                 data = new_data
 
-        print(f"New Command that is active: {data}")
-        # print(f"New Command that is active: {data}")
+        print(f" Command that is active: {data}")
 
         if time.time() - prev_time > 0.01:
-            if not forward: 
-                data = "s"
             drive_car(data, motors)
-            forward = 1
             prev_time = time.time()
 
         # Checking if there is nothing closer than 20 cm
-        if data == "w":
-            forward = adjust_distance(infra, motors)
+        
+        forward = adjust_distance(infra, motors, data)
+        if not forward:
+            data = "s"
         adjust_alignment(rgb, motors)
         # PID controller or other ongoing tasks can run here
         # For example, you can add logic to control the car's behavior
@@ -82,13 +74,14 @@ def server_program():
     conn.close()  # Close connection when done
 
 
-def adjust_distance(infra, motors):
+def adjust_distance(infra, motors, data):
     distance = infra.run()
     if distance < 20:
         print("Tell me you are stopping here please")
             # motors.adjust_setpoint(0.5, 0.5)
-        motors.l_motor.throttle = 0
-        motors.r_motor.throttle = 0 
+        if data == "w":
+            motors.l_motor.throttle = 0
+            motors.r_motor.throttle = 0 
         time.sleep(0.5)
         return 0
 
