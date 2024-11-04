@@ -62,6 +62,8 @@ def server_program():
             new_data = conn.recv(1024).decode()
             if new_data != "" and len(new_data) == 1:
                 data = new_data
+
+        print(f"New Command that is active: {data}")
         # print(f"New Command that is active: {data}")
         if time.time() - prev_time > 0.1:
             drive_car(data, motors)
