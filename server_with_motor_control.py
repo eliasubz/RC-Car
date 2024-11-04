@@ -82,7 +82,13 @@ def adjust_distance(infra, motors):
     if distance < 20:
         print("Something came to close initiating slow retreatment")
         if motors.speed_reached():
-            motors.adjust_setpoint(0.5, 0.5)
+            # motors.adjust_setpoint(0.5, 0.5)
+            motors.l_motor.throttle = 0
+            motors.r_motor.throttle = 0 
+            time.sleep(0.5)
+
+
+
     elif distance < 40:
         print("im in the range")
         # if motors.speed_reached():
