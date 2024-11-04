@@ -18,7 +18,7 @@ def get_motor():
     return i2c, 0
 
 def server_program():
-    host = "10.98.212.51"
+    host = "10.98.212.90"
     port = 5000  # Port number
 
     server_socket = socket.socket()  # Get instance of socket
@@ -59,7 +59,7 @@ def server_program():
             if new_data != "" and len(new_data) == 1:
                 data = new_data
         # print(f"New Command that is active: {data}")
-        if time.time() - prev_time < 0.5:
+        if time.time() - prev_time > 0.5:
             drive_car(data, motors)
             prev_time = time.time()
 
