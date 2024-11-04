@@ -13,6 +13,8 @@ from rgb_sensor import RGB
 alpha = 1
 r_mov = 0
 l_mov = 0
+l_th = 0
+r_th = 0
 
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
@@ -124,11 +126,14 @@ def old_adjust_alignment(rgb, motors):
 def adjust_alignment(rgb, motors):
     global r_mov
     global l_mov
+    global l_th
+    global r_th
     r, g, b = rgb.sensor.color_rgb_bytes
     if r > g + b:
         print("We see red GO Right")
         print("red: ", r, " green ", g, " blue: ", b)
         if r_mov == 0:
+            r_th = motors.r_motor.throttle 
             motors.r_motor.throttle = 0
         throttle = motors.r_motor.throttle
         motors.r_motor.throttle = throttle * 0.1
@@ -138,13 +143,20 @@ def adjust_alignment(rgb, motors):
         print("We see blue Go LEFT")
         print("red: ", r, " green ", g, " blue: ", b)
         if l_mov == 0:
+            l_th = motors.l_motor.throttle
             motors.l_motor.throttle = 0
         throttle = motors.l_motor.throttle
         motors.l_motor.throttle = throttle * 0.1
 
     else:
+        if l_mov != 0:
+            motors.l_motor.throttle = l_th
+        
+        if r_mov != 0:
+            motors.r_motor.throttle = r_th
         l_mov=0
         r_mov=0
+
         print("")
         print("We see black alllegidly")
         print("red: ", r, " green ", g, " blue: ", b)
