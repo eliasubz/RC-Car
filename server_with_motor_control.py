@@ -45,7 +45,7 @@ def server_program():
     while True:
         # Checking if there is nothing closer than 20 cm
 
-        adjust_distance(infra, motors)
+        forward = adjust_distance(infra, motors)
         adjust_alignment(rgb, motors)
 
         # if infra.run() < 20:
@@ -66,8 +66,8 @@ def server_program():
 
         print(f"New Command that is active: {data}")
         # print(f"New Command that is active: {data}")
-        if time.time() - prev_time > 0.1:
-            drive_car(data, motors)
+        if time.time() - prev_time > 0.01:
+            drive_car(data, motors, forward)
             prev_time = time.time()
 
         # PID controller or other ongoing tasks can run here
@@ -86,6 +86,7 @@ def adjust_distance(infra, motors):
             motors.l_motor.throttle = 0
             motors.r_motor.throttle = 0 
             time.sleep(0.5)
+            return 1
 
 
 
@@ -97,7 +98,6 @@ def adjust_distance(infra, motors):
         print("Obstacle too far away")
         if motors.speed_reached():
             motors.adjust_setpoint(1.1, 1.1)
-    return 0
 
 
 def old_adjust_alignment(rgb, motors):
@@ -143,7 +143,7 @@ def adjust_alignment(rgb, motors):
     return 0
 
 
-def drive_car(command, motors):
+def drive_car(command, motors,forward):
     global alpha
     max_speed = 1300  # Maximum motor speed
 
@@ -164,7 +164,10 @@ def drive_car(command, motors):
     # Handle directional controls
     if command == "w":
         # Move forward (both motors at the same positive speed)
-        motors.run(alpha * max_speed, alpha * max_speed)
+        if not forward:
+            motors.run(alpha * max_speed, alpha * max_speed)
+            command == "s"
+            forward = 0
         # print(f"Moving forward at speed {alpha * max_speed}")
 
     elif command == "s":
