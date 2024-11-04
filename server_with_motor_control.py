@@ -45,6 +45,7 @@ def server_program():
     forward = 1
     while True:
 
+        adjust_alignment(rgb, motors)
     
         ready_to_read, _, _ = select.select([conn], [], [], 0)
         # Try receiving data (non-blocking mode)
@@ -66,7 +67,6 @@ def server_program():
         forward = adjust_distance(infra, motors, data)
         if not forward:
             data = "s"
-        adjust_alignment(rgb, motors)
         # PID controller or other ongoing tasks can run here
         # For example, you can add logic to control the car's behavior
         # based on sensor inputs, time, etc.
@@ -80,8 +80,8 @@ def adjust_distance(infra, motors, data):
         print("Tell me you are stopping here please")
             # motors.adjust_setpoint(0.5, 0.5)
         if data == "w":
-            motors.l_motor.throttle = 0
-            motors.r_motor.throttle = 0 
+            motors.l_motor.throttle = -0.1
+            motors.r_motor.throttle = -0.1
         time.sleep(0.5)
         return 0
 
@@ -133,7 +133,7 @@ def adjust_alignment(rgb, motors):
         print("We see blue Go LEFT")
         print("red: ", r, " green ", g, " blue: ", b)
         throttle = motors.l_motor.throttle
-        motors.r_motor.throttle = throttle * 0.85
+        motors.l_motor.throttle = throttle * 0.85
 
     else:
         print("")
