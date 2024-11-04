@@ -170,8 +170,8 @@ def drive_car(command, motors):
     # Handle directional controls
     if command == "w":
         # Move forward (both motors at the same positive speed)
-        if not forward:
-            motors.run(alpha * max_speed, alpha * max_speed)
+        
+        motors.run(alpha * max_speed, alpha * max_speed)
         # print(f"Moving forward at speed {alpha * max_speed}")
 
     elif command == "s":
