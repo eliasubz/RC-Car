@@ -94,10 +94,12 @@ def adjust_distance(infra, motors):
         print("im in the range")
         # if motors.speed_reached():
         # motors.adjust_setpoint(, )
+        return 0
     else:  # No obstacles in the way
         print("Obstacle too far away")
         if motors.speed_reached():
             motors.adjust_setpoint(1.1, 1.1)
+        return 0
 
 
 def old_adjust_alignment(rgb, motors):
@@ -146,6 +148,8 @@ def adjust_alignment(rgb, motors):
 def drive_car(command, motors,forward):
     global alpha
     max_speed = 1300  # Maximum motor speed
+    if forward:
+        command == "s"
 
     # Adjust alpha values for speed scaling
     if command == "j":
@@ -166,8 +170,6 @@ def drive_car(command, motors,forward):
         # Move forward (both motors at the same positive speed)
         if not forward:
             motors.run(alpha * max_speed, alpha * max_speed)
-            command == "s"
-            forward = 0
         # print(f"Moving forward at speed {alpha * max_speed}")
 
     elif command == "s":
