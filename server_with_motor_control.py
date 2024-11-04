@@ -11,7 +11,8 @@ from Infra import Infra
 from rgb_sensor import RGB
 
 alpha = 1
-
+r_mov = 0
+l_mov = 0
 
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
@@ -120,8 +121,6 @@ def old_adjust_alignment(rgb, motors):
         print("red: ", r, " green ", g, " blue: ", b)
     return 0
 
-r_mov = 0
-l_mov = 0
 def adjust_alignment(rgb, motors):
     r, g, b = rgb.sensor.color_rgb_bytes
     if r > g + b:
