@@ -65,14 +65,15 @@ def server_program():
         # print(f"New Command that is active: {data}")
 
         if time.time() - prev_time > 0.01:
-            data = "s"
+            if not forward: 
+                data = "s"
             drive_car(data, motors)
             forward = 1
             prev_time = time.time()
 
         # Checking if there is nothing closer than 20 cm
-        if forward and data == "w":
-            forward = adjust_distance(infra, motors)
+        
+        forward = adjust_distance(infra, motors)
         adjust_alignment(rgb, motors)
         # PID controller or other ongoing tasks can run here
         # For example, you can add logic to control the car's behavior
