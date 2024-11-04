@@ -40,7 +40,7 @@ async def send_on_keypress(writer):
 # Asynchronous function to set up the client
 async def main():
     # Connect to the server
-    reader, writer = await asyncio.open_connection('10.98.212.51', 5000)
+    reader, writer = await asyncio.open_connection('10.98.212.90', 5000)
 
     # Create and run tasks for sending and receiving messages
     receive_task = asyncio.create_task(receive_messages(reader))

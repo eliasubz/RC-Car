@@ -24,9 +24,9 @@ class Motors:
         self.r_rotor = RotaryEncoder(5, 13, max_steps=0)
         self.l_rot_p_s = 0
         self.r_rot_p_s = 0
-        self.tstart = time.perf_counter()
-        self.tprev = 0
-        self.tcurr = 0
+        self.lprev_time = time.time()
+        self.rprev_time = time.time()
+
         self.lprevstep = 0
         self.rprevstep = 0
 
@@ -62,27 +62,34 @@ class Motors:
 
     # calculates the steps since the last timestep
     def get_steps_p_sam(self):
-        self.tcurr = time.perf_counter() - self.tstart
-        print("current time ", self.tcurr )
-        dt = self.tcurr - self.tprev
-        l_speed = (self.l_rotor.steps - self.lprevstep) / (dt)
-        r_speed = (self.r_rotor.steps - self.rprevstep) / (dt)
-        self.lprevstep = self.l_rotor.steps
-        self.rprevstep = self.r_rotor.steps
-        self.tprev = self.tcurr
+        tcurr = time.time()        
+        cur_steps = self.l_rotor.steps
+        l_speed = (cur_steps - self.lprevstep) / (tcurr - self.lprev_time)
+        self.lprevstep = cur_steps
+        self.lprev_time = tcurr
+
+
+        tcurr = time.time()
+        cur_steps = self.r_rotor.steps
+        r_speed = (cur_steps- self.rprevstep) / (tcurr - self.rprev_time)
+        self.rprevstep = cur_steps
+        self.rprev_time = tcurr
+        deltaT = self.rprev_time - self.lprev_time
         if (l_speed == 0):
-            print(self.l_rotor.steps, " " , self.lprevstep , "  " , dt) 
+            print(self.l_rotor.steps, " " , self.lprevstep , "  " , deltaT) 
+            
+        print ("RIght time minus left time: ", deltaT)
         return l_speed, r_speed
 
 
     def update(self,l_motor_power, r_motor_power):
         # Calculate and clamp the left motor throttle
-        print("raw speeds : ", self.l_motor.throttle + l_motor_power, " " ,self.r_motor.throttle + r_motor_power)
+        print("raw throttles : ", self.l_motor.throttle + l_motor_power, " " ,self.r_motor.throttle + r_motor_power)
 
         self.l_motor.throttle = max(-1, min(self.l_motor.throttle + l_motor_power, 1))
 
         self.r_motor.throttle = max(-1, min(self.r_motor.throttle + r_motor_power, 1))
-        print(self.l_motor.throttle)
+        
 
         return self.l_speed, self.r_speed
 
