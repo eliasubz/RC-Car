@@ -66,7 +66,7 @@ def server_program():
 
         print(f"New Command that is active: {data}")
         # print(f"New Command that is active: {data}")
-        if time.time() - prev_time > 0.01:
+        if time.time() - prev_time > 0.01 or forward:
             drive_car(data, motors, forward)
             prev_time = time.time()
 
@@ -81,12 +81,11 @@ def adjust_distance(infra, motors):
     distance = infra.run()
     if distance < 20:
         print("Something came to close initiating slow retreatment")
-        if motors.speed_reached():
             # motors.adjust_setpoint(0.5, 0.5)
-            motors.l_motor.throttle = 0
-            motors.r_motor.throttle = 0 
-            time.sleep(0.5)
-            return 1
+        motors.l_motor.throttle = 0
+        motors.r_motor.throttle = 0 
+        time.sleep(0.5)
+        return 1
 
 
 
