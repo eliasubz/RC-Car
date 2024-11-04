@@ -60,6 +60,7 @@ def server_program():
 
         if ready_to_read:
             new_data = conn.recv(1024).decode()
+            print(new_data)
             if new_data != "" and len(new_data) == 1:
                 data = new_data
 
