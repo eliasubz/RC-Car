@@ -61,6 +61,7 @@ class Infra:
         """Read voltage from the sensor and return the corresponding distance."""
         voltage = self.channel.voltage
         distance = self.voltage_to_distance(voltage)
+        print("Distance", distance)
         return distance
 
 
