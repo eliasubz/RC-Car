@@ -127,13 +127,13 @@ def adjust_alignment(rgb, motors):
         print("We see red GO Right")
         print("red: ", r, " green ", g, " blue: ", b)
         throttle = motors.r_motor.throttle
-        motors.r_motor.throttle = throttle * 0.85
+        motors.r_motor.throttle = throttle * 0.6
 
     elif b > r + g or b > 15:
         print("We see blue Go LEFT")
         print("red: ", r, " green ", g, " blue: ", b)
         throttle = motors.l_motor.throttle
-        motors.l_motor.throttle = throttle * 0.85
+        motors.l_motor.throttle = throttle * 0.6
 
     else:
         print("")
