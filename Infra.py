@@ -23,6 +23,7 @@ class Infra:
         # Reference data points (voltage, distance)
         data = [
             (2.75, 15),  # 2.75 V -> 15 cm
+            (2.28, 20),
             (2.0, 30),   # 2.0 V -> 30 cm
             (1.5, 40),   # 1.5 V -> 40 cm
             (1.2, 50),   # 1.2 V -> 50 cm
@@ -63,6 +64,7 @@ class Infra:
         distance = self.voltage_to_distance(voltage)
         print("Voltage ", voltage)
         print("Distance", distance)
+        time.sleep(0.5)
         return distance
 
 
