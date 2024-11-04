@@ -17,7 +17,6 @@ class Motors:
     and where the heat dissipates slowly over time
     """
 
-
     def __init__(self):
         self.l_motor, self.r_motor = self.get_private_motor()
         self.l_rotor = RotaryEncoder(4, 17, max_steps=0)
@@ -49,52 +48,47 @@ class Motors:
         pwmina1 = pwmio.PWMOut(board.D20)
         pwmina2 = pwmio.PWMOut(board.D21)
 
-
-        motorL= motor.DCMotor(pwmina1, pwmina2)
+        motorL = motor.DCMotor(pwmina1, pwmina2)
         motorR = motor.DCMotor(pwminb1, pwminb2)
         motorL.throttle = 0
         motorR.throttle = 0
         return motorL, motorR
-    
+
     def get_motors(self):
         return self.l_motor, self.r_motor
 
-
     # calculates the steps since the last timestep
     def get_steps_p_sam(self):
-        tcurr = time.time()        
+        tcurr = time.time()
         cur_steps = self.l_rotor.steps
         l_speed = (cur_steps - self.lprevstep) / (tcurr - self.lprev_time)
         self.lprevstep = cur_steps
         self.lprev_time = tcurr
 
-
         tcurr = time.time()
         cur_steps = self.r_rotor.steps
-        r_speed = (cur_steps- self.rprevstep) / (tcurr - self.rprev_time)
+        r_speed = (cur_steps - self.rprevstep) / (tcurr - self.rprev_time)
         self.rprevstep = cur_steps
         self.rprev_time = tcurr
         deltaT = self.rprev_time - self.lprev_time
-        if (l_speed == 0):
-            print(self.l_rotor.steps, " " , self.lprevstep , "  " , deltaT) 
-            
-        print ("RIght time minus left time: ", deltaT)
+        if l_speed == 0:
+            print(self.l_rotor.steps, " ", self.lprevstep, "  ", deltaT)
+
         return l_speed, r_speed
 
-
-    def update(self,l_motor_power, r_motor_power):
+    def update(self, l_motor_power, r_motor_power):
         # Calculate and clamp the left motor throttle
-        print("raw throttles : ", self.l_motor.throttle + l_motor_power, " " ,self.r_motor.throttle + r_motor_power)
+        print(
+            f"throttle left : {self.l_motor.throttle + l_motor_power:.2f}, throttle right :{self.r_motor.throttle + r_motor_power:.2f}"
+        )
 
         self.l_motor.throttle = max(-1, min(self.l_motor.throttle + l_motor_power, 1))
 
         self.r_motor.throttle = max(-1, min(self.r_motor.throttle + r_motor_power, 1))
-        
 
         return self.l_speed, self.r_speed
 
-
-    def run (self, l_speed_goal, r_speed_goal):
+    def run(self, l_speed_goal, r_speed_goal):
         if l_speed_goal == 0:
             self.l_motor.throttle = 0
 
@@ -112,25 +106,29 @@ class Motors:
         self.l_speed, self.r_speed = self.get_steps_p_sam()
         l_power = self.l_pid(self.l_speed)
         r_power = self.r_pid(self.r_speed)
-        print(f"l_s: {self.l_speed:.2f}, l_p: {l_power:.2f}, left throttle: {self.l_motor.throttle:.2f}, \nr_s: {self.r_speed:.2f}, r_p: {r_power:.2f}, right throttle: {self.r_motor.throttle:.2f}")
-        print("Left setpoint: ", self.l_pid.setpoint)
-        print("Right setpoint: ", self.r_pid.setpoint)
+        print(
+            f"l_s: {self.l_speed:.2f}, l_p: {l_power:.2f}, left throttle: {self.l_motor.throttle:.2f}, \nr_s: {self.r_speed:.2f}, r_p: {r_power:.2f}, right throttle: {self.r_motor.throttle:.2f}"
+        )
+        print(
+            "Left setpoint: ",
+            self.l_pid.setpoint,
+            "Right setpoint: ",
+            self.r_pid.setpoint,
+        )
         self.l_speed, self.r_speed = self.update(l_power, r_power)
 
-    def setup(self, l_rot_p_sec_goal, r_rot_p_sec_goal):
-        kp = 0.00001
-        ki = 0.001
-        kd = 0.001
-        l_pid = PID(kp, ki, kd, setpoint=l_rot_p_sec_goal)
-        l_pid.output_limits = (-1, 1)
+    def adjust_setpoint(self, l_percentage, r_percentage):
+        self.l_pid.setpoint = self.l_pid.setpoint * l_percentage
+        self.r_pid.setpoint = self.r_pid.setpoint * r_percentage
+
+    def speed_reached(self):
+        return (
+            abs(self.l_speed - self.l_pid.setpoint) <= 50
+            and abs(self.r_speed - self.r_pid.setpoint) <= 50
+        )
 
 
-        r_pid = PID(kp, ki, kd, setpoint=r_rot_p_sec_goal)
-        r_pid.output_limits = (-1, 1)
-
-
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     motors = Motors()
 
     l_rot, r_rot = motors.get_steps_p_sam()
@@ -142,11 +140,10 @@ if __name__ == '__main__':
     l_pid = PID(kp, ki, kd, setpoint=l_goal_speed)
     l_pid.output_limits = (-1, 1)
 
-
     r_pid = PID(kp, ki, kd, setpoint=r_goal_speed)
     r_pid.output_limits = (-1, 1)
 
-    l_speed,r_speed = motors.get_steps_p_sam()
+    l_speed, r_speed = motors.get_steps_p_sam()
 
     # Keep track of values for plotting
     setpoint, y, x = [], [], []
@@ -156,7 +153,7 @@ if __name__ == '__main__':
         l_power = l_pid(l_speed)
         r_power = r_pid(r_speed)
         l_speed, r_speed = motors.update(l_power, r_power)
-        print("l_s ", l_speed, " r_s " , r_speed, " l_p ", l_power, " r_p ", r_power)
+        print("l_s ", l_speed, " r_s ", r_speed, " l_p ", l_power, " r_p ", r_power)
 
         x += [r_rot]
         y += [r_power]
@@ -164,6 +161,3 @@ if __name__ == '__main__':
 
         if time.time() - start_time < 10 and l_pid.setpoint != 900:
             l_pid = PID(kp, ki, kd, setpoint=900)
-
-
-
