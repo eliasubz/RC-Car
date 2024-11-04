@@ -80,7 +80,7 @@ def server_program():
 def adjust_distance(infra, motors):
     distance = infra.run()
     if distance < 20:
-        print("Something came to close initiating slow retreatment")
+        print("Tell me you are stopping here please")
             # motors.adjust_setpoint(0.5, 0.5)
         motors.l_motor.throttle = 0
         motors.r_motor.throttle = 0 
