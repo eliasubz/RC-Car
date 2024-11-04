@@ -59,22 +59,22 @@ class Motors:
 
     # calculates the steps since the last timestep
     def get_steps_p_sam(self):
-        tcurr = time.time()
-        cur_steps = self.l_rotor.steps
-        l_speed = (cur_steps - self.lprevstep) / (tcurr - self.lprev_time)
-        self.lprevstep = cur_steps
-        self.lprev_time = tcurr
 
         tcurr = time.time()
         cur_steps = self.r_rotor.steps
-        r_speed = (cur_steps - self.rprevstep) / (tcurr - self.rprev_time)
+        r_sped = (cur_steps - self.rprevstep) / (tcurr - self.rprev_time)
         self.rprevstep = cur_steps
         self.rprev_time = tcurr
-        deltaT = self.rprev_time - self.lprev_time
-        if l_speed == 0:
-            print(self.l_rotor.steps, " ", self.lprevstep, "  ", deltaT)
+        # deltaT = self.rprev_time - self.lprev_time
+        # if l_speed == 0:
+        #     print(self.l_rotor.steps, " ", self.lprevstep, "  ", deltaT)
 
-        return l_speed, r_speed
+        tcurr = time.time()
+        cur_steps = self.l_rotor.steps
+        l_sped = (cur_steps - self.lprevstep) / (tcurr - self.lprev_time)
+        self.lprevstep = cur_steps
+        self.lprev_time = tcurr
+        return l_sped, r_sped
 
     def update(self, l_motor_power, r_motor_power):
         # Calculate and clamp the left motor throttle
