@@ -48,7 +48,7 @@ def server_program():
             lm, rm = motors.get_motor()
             lm.throttle = -0.1
             lm.throttle = -0.1
-            time.sleep(0.5)
+            time.sleep(0.01)
 
 
         ready_to_read, _, _ = select.select([conn], [], [], 0)
