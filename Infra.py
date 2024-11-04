@@ -64,7 +64,6 @@ class Infra:
         distance = self.voltage_to_distance(voltage)
         print("Voltage ", voltage)
         print("Distance", distance)
-        time.sleep(0.5)
         return distance
 
 
