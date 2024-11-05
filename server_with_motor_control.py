@@ -49,9 +49,12 @@ def server_program():
     prev_time = time.time()
     forward = 1
     while True:
+
         if change % 3 == 0: 
+            print("Change",change)
             old_adjust_alignment(rgb, motors)
-        if change % 3 == 1: 
+        if change % 3 == 1:
+            print("Change",change)
             adjust_alignment(rgb, motors)
         
 
@@ -111,7 +114,7 @@ def old_adjust_alignment(rgb, motors):
         print(
             "We see red GO Right",
         )
-        motors.r_motor.throttle = -0.2
+        motors.r_motor.throttle = 0
         motors.l_motor.throttle = 0.18
         while True:
             r, g, b = rgb.sensor.color_rgb_bytes
@@ -124,7 +127,7 @@ def old_adjust_alignment(rgb, motors):
 
     elif b > r + g or b > 15:
         print("We see blue Go LEFT")
-        motors.l_motor.throttle = -0.2
+        motors.l_motor.throttle = 0
         motors.r_motor.throttle = 0.18
         while True:
 
