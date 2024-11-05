@@ -112,20 +112,20 @@ def old_adjust_alignment(rgb, motors):
             "We see red GO Right",
         )
         motors.r_motor.throttle = -0.2
-        motors.l_motor.throttle = 0.16
+        motors.l_motor.throttle = 0.17
         while True:
             r, g, b = rgb.sensor.color_rgb_bytes
             if r < g + b:
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
-            motors.l_motor.throttle = 0
+            motors.r_motor.throttle = 0
 
 
     elif b > r + g or b > 15:
         print("We see blue Go LEFT")
         motors.l_motor.throttle = -0.2
-        motors.r_motor.throttle = 0.16
+        motors.r_motor.throttle = 0.17
         while True:
 
             r, g, b = rgb.sensor.color_rgb_bytes
