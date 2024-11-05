@@ -16,6 +16,7 @@ l_mov = 0
 l_th = 0
 r_th = 0
 
+
 def get_motor():
     i2c = busio.I2C(SCL, SDA)
     return i2c, 0
@@ -49,7 +50,7 @@ def server_program():
     while True:
 
         adjust_alignment(rgb, motors)
-    
+
         ready_to_read, _, _ = select.select([conn], [], [], 0)
         # Try receiving data (non-blocking mode)
 
@@ -66,7 +67,7 @@ def server_program():
             prev_time = time.time()
 
         # Checking if there is nothing closer than 20 cm
-        
+
         forward = adjust_distance(infra, motors, data)
         if not forward:
             data = "s"
@@ -81,14 +82,12 @@ def adjust_distance(infra, motors, data):
     distance = infra.run()
     if distance < 20:
         print("Tell me you are stopping here please")
-            # motors.adjust_setpoint(0.5, 0.5)
+        # motors.adjust_setpoint(0.5, 0.5)
         if data == "w":
             motors.l_motor.throttle = -0.1
             motors.r_motor.throttle = -0.1
         time.sleep(0.5)
         return 0
-
-
 
     elif distance < 40:
         print("im in the range")
@@ -106,22 +105,33 @@ def old_adjust_alignment(rgb, motors):
     r, g, b = rgb.sensor.color_rgb_bytes
     if r > g + b:
         print(
-            "u:damit das ert kleppt mus man :ABONIEREN",
-            "oder so",
-            "omg auf beiden seiten",
-            "#Lifehack",
             "We see red GO Right",
         )
         motors.r_motor.throttle = 0
+        motors.l_motor.throttle = 0.1
+        while True:
+            r, g, b = rgb.sensor.color_rgb_bytes
+            if r < g + b:
+                motors.l_motor.throttle = 0
+                motors.r_motor.throttle = 0
+                return 0
 
     elif b > r + g or b > 15:
         print("We see blue Go LEFT")
         motors.l_motor.throttle = 0
+        motors.r_motor.throttle = 0.1
+        while True:
+            r, g, b = rgb.sensor.color_rgb_bytes
+            if b < r + g:
+                motors.l_motor.throttle = 0
+                motors.r_motor.throttle = 0
+                return 0
 
     else:
         print("We see black alllegidly")
         print("red: ", r, " green ", g, " blue: ", b)
     return 0
+
 
 def adjust_alignment(rgb, motors):
     global r_mov
@@ -133,7 +143,7 @@ def adjust_alignment(rgb, motors):
         print("We see red GO Right")
         print("red: ", r, " green ", g, " blue: ", b)
         if r_mov == 0:
-            r_th = motors.r_motor.throttle 
+            r_th = motors.r_motor.throttle
             motors.r_motor.throttle = 0
         throttle = motors.r_motor.throttle
         motors.r_motor.throttle = throttle * 0.1
@@ -151,11 +161,11 @@ def adjust_alignment(rgb, motors):
     else:
         if l_mov != 0:
             motors.l_motor.throttle = l_th
-        
+
         if r_mov != 0:
             motors.r_motor.throttle = r_th
-        l_mov=0
-        r_mov=0
+        l_mov = 0
+        r_mov = 0
 
         print("")
         print("We see black alllegidly")
@@ -184,7 +194,7 @@ def drive_car(command, motors):
     # Handle directional controls
     if command == "w":
         # Move forward (both motors at the same positive speed)
-        
+
         motors.run(alpha * max_speed, alpha * max_speed)
         # print(f"Moving forward at speed {alpha * max_speed}")
 
