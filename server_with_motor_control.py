@@ -73,11 +73,7 @@ def server_program():
         # Checking if there is nothing closer than 20 cm
 
         forward = adjust_distance(infra, motors, data)
-        # if not forward:
-            # data = "s"
-        # PID controller or other ongoing tasks can run here
-        # For example, you can add logic to control the car's behavior
-        # based on sensor inputs, time, etc.
+        
 
     conn.close()  # Close connection when done
 
@@ -115,25 +111,29 @@ def old_adjust_alignment(rgb, motors):
         print(
             "We see red GO Right",
         )
-        motors.r_motor.throttle = -0.1
-        motors.l_motor.throttle = 0.15
+        motors.r_motor.throttle = -0.2
+        motors.l_motor.throttle = 0.16
         while True:
             r, g, b = rgb.sensor.color_rgb_bytes
             if r < g + b:
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
+            motors.l_motor.throttle = 0
+
 
     elif b > r + g or b > 15:
         print("We see blue Go LEFT")
-        motors.l_motor.throttle = -0.1
-        motors.r_motor.throttle = 0.15
+        motors.l_motor.throttle = -0.2
+        motors.r_motor.throttle = 0.16
         while True:
+
             r, g, b = rgb.sensor.color_rgb_bytes
             if b < r + g:
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
+            motors.l_motor.throttle = 0
 
     else:
         print("We see black alllegidly")
