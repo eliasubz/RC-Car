@@ -66,7 +66,7 @@ def server_program():
 
         print(f" Command that is active: {data}")
 
-        if time.time() - prev_time > 0.01:
+        if time.time() - prev_time > 0.05:
             drive_car(data, motors)
             prev_time = time.time()
 
