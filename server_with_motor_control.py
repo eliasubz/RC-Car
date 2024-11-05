@@ -75,7 +75,8 @@ def server_program():
 
         # Checking if there is nothing closer than 20 cm
 
-        forward = adjust_distance(infra, motors, data)
+        old_adjust_alignment(rgb, motors)
+        forward = adjust_distance(infra, motors, data)#
         
 
     conn.close()  # Close connection when done
@@ -101,11 +102,8 @@ def adjust_distance(infra, motors, data):
         # if motors.speed_reached():
         # motors.adjust_setpoint(, )
         return 1
-    else:  # No obstacles in the way
-        print("Obstacle too far away")
-        if motors.speed_reached():
-            motors.adjust_setpoint(1.1, 1.1)
-        return 1
+        
+    return 1
 
 
 def old_adjust_alignment(rgb, motors):
