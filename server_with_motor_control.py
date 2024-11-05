@@ -69,7 +69,7 @@ def server_program():
 
         print(f" Command that is active: {data}")
 
-        if time.time() - prev_time > 0.01:
+        if time.time() - prev_time > 0.1:
             drive_car(data, motors)
             prev_time = time.time()
 
@@ -90,7 +90,7 @@ def adjust_distance(infra, motors, data):
         motors.r_motor.throttle = -0.17
         while True:
             distance = infra.run()
-            if distance > 24:
+            if distance > 28:
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
