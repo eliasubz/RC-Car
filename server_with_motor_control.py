@@ -120,7 +120,7 @@ def old_adjust_alignment(rgb, motors):
         motors.l_motor.throttle = 0.19
         while True:
             r, g, b = rgb.sensor.color_rgb_bytes
-            motor.r_motor.throttle += 0.01
+            motors.l_motor.throttle += 0.01
             if left + right < 0.23:
                 time.sleep(0.05)
             if r < g + b:
@@ -138,7 +138,7 @@ def old_adjust_alignment(rgb, motors):
 
             r, g, b = rgb.sensor.color_rgb_bytes
             if b < r + g:
-                motor.r_motor.throttle += 0.01
+                motors.r_motor.throttle += 0.01
                 if left + right < 0.23:
                     time.sleep(0.05)
                 motors.l_motor.throttle = 0
