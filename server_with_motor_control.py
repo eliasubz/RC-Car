@@ -127,10 +127,9 @@ def old_adjust_alignment(rgb, motors):
             if r < g + b:
                 if counter < 3:
                     time.sleep(0.05)
-                motors.l_motor.throttle = 0
-                motors.r_motor.throttle = 0
+                motors.l_motor.throttle = 0.19
+                motors.r_motor.throttle = 0.19
                 return 0
-            motors.r_motor.throttle = 0
 
 
     elif b > r + g or b > 15:
@@ -145,10 +144,9 @@ def old_adjust_alignment(rgb, motors):
                 # if left + right < 0.23:
                 if counter < 3:
                     time.sleep(0.05)
-                motors.l_motor.throttle = 0
-                motors.r_motor.throttle = 0
+                motors.l_motor.throttle = 0.19
+                motors.r_motor.throttle = 0.19
                 return 0
-            motors.l_motor.throttle = 0
 
     else:
         print("We see black alllegidly")
