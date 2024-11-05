@@ -15,6 +15,7 @@ r_mov = 0
 l_mov = 0
 l_th = 0
 r_th = 0
+change = 0
 
 
 def get_motor():
@@ -48,8 +49,11 @@ def server_program():
     prev_time = time.time()
     forward = 1
     while True:
-
-        adjust_alignment(rgb, motors)
+        if change % 3 == 0: 
+            adjust_alignment(rgb, motors)
+        if change % 3 == 1: 
+            old_adjust_alignment(rgb, motors)
+        
 
         ready_to_read, _, _ = select.select([conn], [], [], 0)
         # Try receiving data (non-blocking mode)
@@ -157,6 +161,7 @@ def adjust_alignment(rgb, motors):
             motors.l_motor.throttle = 0
         throttle = motors.l_motor.throttle
         motors.l_motor.throttle = throttle * 0.1
+        l_mov +=1
 
     else:
         if l_mov != 0:
@@ -175,6 +180,7 @@ def adjust_alignment(rgb, motors):
 
 def drive_car(command, motors):
     global alpha
+    global change 
     max_speed = 1300  # Maximum motor speed
 
     # Adjust alpha values for speed scaling
@@ -240,6 +246,24 @@ def drive_car(command, motors):
         print(
             f"Curving left (left motor full speed, right motor half speed) at {alpha * max_speed}"
         )
+    elif command == "u":
+        # Left motor at max speed, right motor at half speed (curved left)
+        motors.l_motor.throttle = 1
+        motors.r_motor.throttle = 1
+        print(
+            f"Curving left (left motor full speed, right motor half speed) at {alpha * max_speed}"
+        )
+    elif command == "p":
+            # Left motor at max speed, right motor at half speed (curved left)
+            motors.l_motor.throttle = -1
+            motors.r_motor.throttle = -1
+            print(
+                f"Curving left (left motor full speed, right motor half speed) at {alpha * max_speed}"
+        )
+    
+    elif command == "c":
+        change += 1
+
 
     elif command == "r":
         # Stop both motors
