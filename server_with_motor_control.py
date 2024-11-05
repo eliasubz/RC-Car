@@ -80,14 +80,14 @@ def server_program():
 
 def adjust_distance(infra, motors, data):
     distance = infra.run()
-    if distance < 20:
+    if distance < 25:
         print("Tell me you are stopping here please")
         # motors.adjust_setpoint(0.5, 0.5)
-        motors.l_motor.throttle = -0.15
-        motors.r_motor.throttle = -0.15
+        motors.l_motor.throttle = -0.17
+        motors.r_motor.throttle = -0.17
         while True:
             distance = infra.run()
-            if distance > 20:
+            if distance > 24:
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
