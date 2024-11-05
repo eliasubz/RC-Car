@@ -83,8 +83,8 @@ def adjust_distance(infra, motors, data):
     if distance < 20:
         print("Tell me you are stopping here please")
         # motors.adjust_setpoint(0.5, 0.5)
-        motors.l_motor.throttle = -0.1
-        motors.r_motor.throttle = -0.1
+        motors.l_motor.throttle = -0.15
+        motors.r_motor.throttle = -0.15
         while True:
             distance = infra.run()
             if distance > 20:
