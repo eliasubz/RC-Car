@@ -50,26 +50,26 @@ def server_program():
     forward = 1
     while True:
 
-        if change % 3 == 0: 
-            print("Change",change)
-            old_adjust_alignment(rgb, motors)
-        if change % 3 == 1:
-            print("Change",change)
-            adjust_alignment(rgb, motors)
-        
+        #if change % 3 == 0: 
+        #    print("Change",change)
+        #    old_adjust_alignment(rgb, motors)
+        #if change % 3 == 1:
+        #    print("Change",change)
+        #    adjust_alignment(rgb, motors)
+        old_adjust_alignment(rgb, motors)
 
         ready_to_read, _, _ = select.select([conn], [], [], 0)
         # Try receiving data (non-blocking mode)
-
+        old_adjust_alignment(rgb, motors)
         if ready_to_read:
             new_data = conn.recv(1024).decode()
             print(new_data)
             if new_data != "" and len(new_data) == 1:
                 data = new_data
 
-        print(f" Command that is active: {data}")
+        # print(f" Command that is active: {data}")
 
-        if time.time() - prev_time > 0.05:
+        if time.time() - prev_time > 0.1:
             drive_car(data, motors)
             prev_time = time.time()
 
@@ -112,18 +112,21 @@ def old_adjust_alignment(rgb, motors):
     r, g, b = rgb.sensor.color_rgb_bytes
     left = motors.l_motor.throttle
     right = motors.r_motor.throttle 
+    counter = 0
     if r > g + b:
         print(
             "We see red GO Right",
         )
         motors.r_motor.throttle = 0
         motors.l_motor.throttle = 0.19
+
         while True:
             r, g, b = rgb.sensor.color_rgb_bytes
-            motors.l_motor.throttle += 0.01
-            if left + right < 0.23:
-                time.sleep(0.05)
+            counter += 1
+            #if left + right < 0.23:
             if r < g + b:
+                if counter < 3:
+                    time.sleep(0.05)
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
@@ -139,7 +142,8 @@ def old_adjust_alignment(rgb, motors):
             r, g, b = rgb.sensor.color_rgb_bytes
             if b < r + g:
                 motors.r_motor.throttle += 0.01
-                if left + right < 0.23:
+                # if left + right < 0.23:
+                if counter < 3:
                     time.sleep(0.05)
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
