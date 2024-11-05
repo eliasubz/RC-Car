@@ -69,7 +69,7 @@ def server_program():
 
         print(f" Command that is active: {data}")
 
-        if time.time() - prev_time > 0.1:
+        if time.time() - prev_time > 0.05:
             drive_car(data, motors)
             prev_time = time.time()
 
@@ -110,6 +110,8 @@ def adjust_distance(infra, motors, data):
 
 def old_adjust_alignment(rgb, motors):
     r, g, b = rgb.sensor.color_rgb_bytes
+    left = motors.l_motor.throttle
+    right = motors.r_motor.throttle 
     if r > g + b:
         print(
             "We see red GO Right",
@@ -118,6 +120,8 @@ def old_adjust_alignment(rgb, motors):
         motors.l_motor.throttle = 0.19
         while True:
             r, g, b = rgb.sensor.color_rgb_bytes
+            if left + right < 0.1:
+                time.sleep(0.1)
             if r < g + b:
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
@@ -133,6 +137,8 @@ def old_adjust_alignment(rgb, motors):
 
             r, g, b = rgb.sensor.color_rgb_bytes
             if b < r + g:
+                if left + right < 0.1:
+                    time.sleep(0.1)
                 motors.l_motor.throttle = 0
                 motors.r_motor.throttle = 0
                 return 0
