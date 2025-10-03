@@ -1,4 +1,4 @@
-# Raspberry Pi controlled RC-Car (Embedded Systems)
+# Raspberry Pi controlled Car (Embedded Systems)
 Python modules to control a robot car that is accelerated by 2 motors.The main 
 logic is in Pi_Car.py and lets you use two modes; following a tape 
 on the flor and manually controlling the car, all while adjusting the distance to any obstacles in front. 
