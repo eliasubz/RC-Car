@@ -23,7 +23,7 @@ def get_motor():
     return i2c, 0
 
 
-def server_program():
+def pi_car():
     host = "10.98.212.90"
     port = 5000  # Port number
 
@@ -49,18 +49,19 @@ def server_program():
     prev_time = time.time()
     forward = 1
     while True:
-
-        #if change % 3 == 0: 
-        #    print("Change",change)
-        #    old_adjust_alignment(rgb, motors)
-        #if change % 3 == 1:
-        #    print("Change",change)
-        #    adjust_alignment(rgb, motors)
-        old_adjust_alignment(rgb, motors)
+        
+        # Printing inputs 
+        if change % 3 == 0: 
+           print("Change",change)
+           follow_rgb_strip_2(rgb, motors)
+        if change % 3 == 1:
+           print("Change",change)
+           follow_rgb_strip(rgb, motors)
+        follow_rgb_strip_2(rgb, motors)
 
         ready_to_read, _, _ = select.select([conn], [], [], 0)
         # Try receiving data (non-blocking mode)
-        old_adjust_alignment(rgb, motors)
+        follow_rgb_strip_2(rgb, motors)
         if ready_to_read:
             new_data = conn.recv(1024).decode()
             print(new_data)
@@ -75,14 +76,13 @@ def server_program():
 
         # Checking if there is nothing closer than 20 cm
 
-        old_adjust_alignment(rgb, motors)
-        forward = adjust_distance(infra, motors, data)#
+        follow_rgb_strip_2(rgb, motors)
+        forward = convoy_distance(infra, motors, data)#
         
 
-    conn.close()  # Close connection when done
 
 
-def adjust_distance(infra, motors, data):
+def convoy_distance(infra, motors, data):
     distance = infra.run()
     if distance < 25:
         print("Tell me you are stopping here please")
@@ -106,7 +106,7 @@ def adjust_distance(infra, motors, data):
     return 1
 
 
-def old_adjust_alignment(rgb, motors):
+def follow_rgb_strip_2(rgb, motors):
     r, g, b = rgb.sensor.color_rgb_bytes
     left = motors.l_motor.throttle
     right = motors.r_motor.throttle 
@@ -152,7 +152,7 @@ def old_adjust_alignment(rgb, motors):
     return 0
 
 
-def adjust_alignment(rgb, motors):
+def follow_rgb_strip(rgb, motors):
     global r_mov
     global l_mov
     global l_th
@@ -288,4 +288,4 @@ def drive_car(command, motors):
 
 
 if __name__ == "__main__":
-    server_program()
+    pi_car()
